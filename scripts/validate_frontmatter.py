@@ -15,10 +15,15 @@ from pathlib import Path
 
 import frontmatter
 
-REQUIRED_FIELDS = [
+LEGACY_REQUIRED_FIELDS = [
     "project_name", "quad_name", "members", "report_number",
     "date", "status", "cl_level", "contributions",
 ]
+PORTAL_REQUIRED_FIELDS = [
+    "source", "project_type", "project_name", "quad_name", "members",
+    "report_number", "date", "status", "portal_submission_id",
+]
+VALID_PROJECT_TYPES = {"individual", "team"}
 VALID_STATUSES = {"시작 전", "진행 중", "보류", "완료"}
 VALID_CL_LEVELS = {"CL1", "CL2", "CL3", "CL4"}
 CONTRIBUTION_REQUIRED_KEYS = {"name", "role", "tasks", "percentage"}
@@ -35,10 +40,20 @@ def validate_file(filepath: Path) -> list[str]:
 
     metadata = post.metadata
 
-    # 필수 필드 검사
-    for field in REQUIRED_FIELDS:
+    # ASC_WEB 자동 생성 보고서는 최소 신뢰 메타데이터만 요구하고,
+    # 기존 수동 보고서는 기존 필수 필드를 그대로 유지한다.
+    is_portal_report = metadata.get("source") == "asc_web"
+    required_fields = PORTAL_REQUIRED_FIELDS if is_portal_report else LEGACY_REQUIRED_FIELDS
+    for field in required_fields:
         if field not in metadata:
             errors.append(f"필수 필드 누락: '{field}'")
+
+    if is_portal_report:
+        project_type = metadata.get("project_type")
+        if project_type not in VALID_PROJECT_TYPES:
+            errors.append(
+                f"유효하지 않은 project_type: '{project_type}' (허용: individual, team)"
+            )
 
     # status 유효값 검사
     status = metadata.get("status")
