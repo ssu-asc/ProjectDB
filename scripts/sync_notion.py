@@ -417,8 +417,11 @@ def build_properties(metadata: dict, github_url: str) -> dict:
         "조원": {"rich_text": rich_text(", ".join(metadata.get("members", [])))},
         "보고 회차": {"number": metadata.get("report_number", 1)},
         "진행 상태": {"status": {"name": metadata.get("status", "진행 중")}},
-        "CL 등급": {"select": {"name": metadata.get("cl_level", "CL1")}},
     }
+
+    cl_level = metadata.get("cl_level")
+    if cl_level:
+        properties["CL 등급"] = {"select": {"name": cl_level}}
 
     # 제출일
     date = metadata.get("date")
@@ -489,6 +492,14 @@ def find_tracking_page(
     return None
 
 
+def should_update_tracking(metadata: dict[str, Any]) -> bool:
+    """개인 ASC_WEB 보고서는 팀 제출현황 체크박스를 갱신하지 않는다."""
+    return not (
+        metadata.get("source") == "asc_web"
+        and metadata.get("project_type") == "individual"
+    )
+
+
 def update_tracking_checkbox(
     notion: Client,
     tracking_db_id: str,
@@ -546,7 +557,7 @@ def sync_report(notion: Client, database_id: str, filepath: Path) -> None:
     # 제출 현황 DB 체크박스 업데이트
     week_number = os.environ.get("WEEK_NUMBER", "")
     tracking_db_id = os.environ.get("NOTION_TRACKING_DB_ID", "")
-    if week_number and tracking_db_id:
+    if week_number and tracking_db_id and should_update_tracking(metadata):
         week = int(week_number)
         members = metadata.get("members", [])
         if members:

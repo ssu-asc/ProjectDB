@@ -66,6 +66,20 @@ reports/
 - **팀원별 기여 상세**: 전체 기간 기여도
 - **고찰 및 결론**: 한계점, 기술적 역량 입증
 
+## ASC_WEB 자동 제출 보고서
+
+ASC_WEB에서 승인된 프로젝트 보고서는 기존 ProjectDB 안에 자동으로 저장됩니다. 별도 보고서 저장소를 만들지 않습니다.
+
+- 팀 프로젝트: `reports/{YYYY}/{팀명}/{round_key}-{프로젝트명}/report-01.md`
+- 개인 프로젝트: `reports/{YYYY}/개인/{학번}-{round_key}-{프로젝트명}/report-01.md`
+- `source: asc_web`, `project_type: team|individual` 메타데이터가 붙습니다.
+- 개인 프로젝트는 `quad_name: "개인"`을 사용합니다.
+- ASC_WEB 생성 보고서는 실제 DB 회원/팀 정보를 사용하므로 `cl_level`, `contributions`를 임의로 만들지 않으며 두 필드는 선택입니다.
+- 기존 수동/레거시 보고서는 기존 `cl_level`, `contributions` 필수 규칙을 그대로 사용합니다.
+- 개인 프로젝트는 Notion 프로젝트 DB에는 동기화하지만 팀 제출현황 체크박스는 갱신하지 않습니다.
+
+회원이 올린 Markdown 본문에는 YAML frontmatter가 없어야 하며, ASC_WEB이 승인 시 신뢰 가능한 frontmatter를 자동 생성합니다.
+
 ## 빠른 시작
 
 ### 1. 레포 Fork & Clone

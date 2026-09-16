@@ -287,5 +287,45 @@ class TrackingCheckboxTests(unittest.TestCase):
         )
 
 
+class PortalReportTests(unittest.TestCase):
+    def test_build_properties_omits_optional_cl_and_contributions_for_portal_report(self) -> None:
+        properties = sync_notion.build_properties(
+            {
+                "source": "asc_web",
+                "project_type": "individual",
+                "project_name": "개인 프로젝트",
+                "quad_name": "개인",
+                "members": ["20260001_김하나"],
+                "report_number": 1,
+                "date": "2026-09-16",
+                "status": "진행 중",
+            },
+            "https://github.com/ssu-asc/ProjectDB/blob/abc/report.md",
+        )
+
+        self.assertNotIn("CL 등급", properties)
+        self.assertNotIn("기여도", properties)
+        self.assertEqual(properties["쿼드 조"]["select"]["name"], "개인")
+
+    def test_build_properties_keeps_legacy_cl_when_present(self) -> None:
+        properties = sync_notion.build_properties(
+            {
+                "project_name": "기존 프로젝트",
+                "quad_name": "A조",
+                "members": ["20260001_김하나"],
+                "report_number": 1,
+                "status": "진행 중",
+                "cl_level": "CL2",
+            },
+            "https://github.com/ssu-asc/ProjectDB/blob/abc/report.md",
+        )
+        self.assertEqual(properties["CL 등급"]["select"]["name"], "CL2")
+
+    def test_individual_portal_report_skips_tracking(self) -> None:
+        self.assertFalse(sync_notion.should_update_tracking({"source": "asc_web", "project_type": "individual"}))
+        self.assertTrue(sync_notion.should_update_tracking({"source": "asc_web", "project_type": "team"}))
+        self.assertTrue(sync_notion.should_update_tracking({"project_name": "legacy"}))
+
+
 if __name__ == "__main__":
     unittest.main()
