@@ -55,6 +55,16 @@ reports/
 - **이슈 및 해결 방안**: 기술적 병목, 일정 지연 사유 및 해결 현황
 - **다음 회차 목표**: 다음 2주간 완료할 구체적 작업 리스트
 
+### 개인 프로젝트 진행 보고서 (`individual-report-template.md`)
+
+개인이 단독으로 수행하는 프로젝트용 진행 보고서입니다. 팀 기여도 표 대신 본인이 직접 수행한 작업과 산출물, 검증 내용을 중심으로 기록합니다.
+
+- **프로젝트 진행 현황**: 이번 회차 목표, 현재 진행률, 주요 달성 사항
+- **수행 내역**: 직접 수행한 작업, 산출물 링크, 검증/확인 내용
+- **이슈 및 해결 방안**: 기술적 병목과 해결 과정
+- **다음 회차 목표**: 다음 2주 동안 완료할 구체적 작업
+- 수동 제출 시 frontmatter의 `quad_name`은 `개인`, 단일 `members`, `contributions` 100% 형식을 사용합니다.
+
 ### 최종 기술 보고서 (`final-report-template.md`)
 
 프로젝트 마지막 회차에 제출하는 최종 보고서입니다. `is_final: true`, `status: "완료"` 필수.
@@ -101,6 +111,10 @@ cp templates/project-plan-template.md reports/2026/A조/web-scanner/report-00.md
 
 # 격주 보고서 템플릿 복사
 cp templates/report-template.md reports/2026/A조/web-scanner/report-01.md
+
+# 개인 프로젝트 진행 보고서 템플릿 복사
+mkdir -p reports/2026/개인/20260001-personal-project
+cp templates/individual-report-template.md reports/2026/개인/20260001-personal-project/report-01.md
 
 # 최종 보고서의 경우
 cp templates/final-report-template.md reports/2026/A조/web-scanner/report-08.md
