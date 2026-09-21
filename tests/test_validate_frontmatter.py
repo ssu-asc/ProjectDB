@@ -81,6 +81,10 @@ status: "진행 중"
         self.assertTrue(any("cl_level" in error for error in errors))
         self.assertTrue(any("contributions" in error for error in errors))
 
+    def test_individual_report_template_has_valid_frontmatter(self) -> None:
+        template = Path(__file__).resolve().parents[1] / "templates" / "individual-report-template.md"
+        self.assertEqual(validator.validate_file(template), [])
+
 
 if __name__ == "__main__":
     unittest.main()
