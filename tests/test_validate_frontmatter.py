@@ -81,9 +81,20 @@ status: "진행 중"
         self.assertTrue(any("cl_level" in error for error in errors))
         self.assertTrue(any("contributions" in error for error in errors))
 
-    def test_individual_report_template_has_valid_frontmatter(self) -> None:
-        template = Path(__file__).resolve().parents[1] / "templates" / "individual-report-template.md"
-        self.assertEqual(validator.validate_file(template), [])
+    def test_individual_templates_have_valid_frontmatter_and_no_team_sections(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "templates"
+        for filename in (
+            "individual-project-plan-template.md",
+            "individual-report-template.md",
+            "individual-final-report-template.md",
+        ):
+            template = root / filename
+            self.assertEqual(validator.validate_file(template), [], filename)
+            body = template.read_text(encoding="utf-8")
+            self.assertNotIn("팀원 역할 분담", body, filename)
+            self.assertNotIn("팀원별 기여", body, filename)
+            self.assertNotIn("개인별 기여 내역", body, filename)
+            self.assertIn("학번_이름1", body, filename)
 
 
 if __name__ == "__main__":

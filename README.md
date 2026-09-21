@@ -39,14 +39,14 @@ reports/
 
 ## 보고서 종류
 
-### 프로젝트 계획서 (`project-plan-template.md` → `report-00.md`)
+### 팀 프로젝트 계획서 (`project-plan-template.md` → `report-00.md`)
 
 프로젝트 시작 전 0회차로 제출하는 계획서입니다. KUCIS 서식7 양식을 기반으로 합니다. 주요 항목:
 
 - **프로젝트 개요:** 학교명, 동아리명, 프로젝트명, 분야, 개요, 기대효과
 - **세부 계획서:** 목적, 세부내용, 기대효과, 수행시 문제점, 요구사항, 장비/물품, 팀원 역할 분담
 
-### 격주 진행 보고서 (`report-template.md`)
+### 팀 프로젝트 진행 보고서 (`report-template.md`)
 
 2주 단위로 제출하는 진행 보고서입니다. 주요 항목:
 
@@ -54,6 +54,10 @@ reports/
 - **개인별 기여 내역**: 수행 작업 + 산출물 링크(GitHub 커밋, PR 등) + 기여도(%)
 - **이슈 및 해결 방안**: 기술적 병목, 일정 지연 사유 및 해결 현황
 - **다음 회차 목표**: 다음 2주간 완료할 구체적 작업 리스트
+
+### 개인 프로젝트 계획서 (`individual-project-plan-template.md` → `report-00.md`)
+
+혼자 수행하는 개인 프로젝트의 시작 계획서입니다. 팀원 역할 분담 없이 본인의 수행 계획, 예상 산출물, 검증 방법을 작성합니다.
 
 ### 개인 프로젝트 진행 보고서 (`individual-report-template.md`)
 
@@ -65,7 +69,7 @@ reports/
 - **다음 회차 목표**: 다음 2주 동안 완료할 구체적 작업
 - 수동 제출 시 frontmatter의 `quad_name`은 `개인`, 단일 `members`, `contributions` 100% 형식을 사용합니다.
 
-### 최종 기술 보고서 (`final-report-template.md`)
+### 팀 프로젝트 최종 기술 보고서 (`final-report-template.md`)
 
 프로젝트 마지막 회차에 제출하는 최종 보고서입니다. `is_final: true`, `status: "완료"` 필수.
 
@@ -75,6 +79,10 @@ reports/
 - **실전 입증 및 성과** (심화 프로젝트 필수): 성능 수치, PoC, CVE/KISA 등
 - **팀원별 기여 상세**: 전체 기간 기여도
 - **고찰 및 결론**: 한계점, 기술적 역량 입증
+
+### 개인 프로젝트 최종 기술 보고서 (`individual-final-report-template.md`)
+
+혼자 수행한 개인 프로젝트의 최종 결과를 정리합니다. 팀원별 기여도 표 대신 본인이 직접 수행한 핵심 작업, 산출물, 검증 결과, 해결한 기술적 문제를 작성합니다.
 
 ## ASC_WEB 자동 제출 보고서
 
@@ -115,6 +123,12 @@ cp templates/report-template.md reports/2026/A조/web-scanner/report-01.md
 # 개인 프로젝트 진행 보고서 템플릿 복사
 mkdir -p reports/2026/개인/20260001-personal-project
 cp templates/individual-report-template.md reports/2026/개인/20260001-personal-project/report-01.md
+
+# 개인 프로젝트 계획서
+cp templates/individual-project-plan-template.md reports/2026/개인/20260001-personal-project/report-00.md
+
+# 개인 프로젝트 최종 보고서
+cp templates/individual-final-report-template.md reports/2026/개인/20260001-personal-project/report-08.md
 
 # 최종 보고서의 경우
 cp templates/final-report-template.md reports/2026/A조/web-scanner/report-08.md
