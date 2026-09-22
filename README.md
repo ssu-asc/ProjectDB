@@ -2,7 +2,7 @@
 
 ASC 보안 동아리 프로젝트 보고서 관리 시스템
 
-쿼드 팀이 Git PR로 격주 보고서를 제출하면, 관리자 리뷰 후 merge 시 자동으로 Notion DB에 동기화됩니다.
+쿼드 팀이 Git PR로 격주 보고서를 제출하면, 관리자 리뷰 후 merge 시 저장소에 반영됩니다.
 
 ## 마감
 
@@ -94,7 +94,7 @@ ASC_WEB에서 승인된 프로젝트 보고서는 기존 ProjectDB 안에 자동
 - 개인 프로젝트는 `quad_name: "개인"`을 사용합니다.
 - ASC_WEB 생성 보고서는 실제 DB 회원/팀 정보를 사용하므로 `cl_level`, `contributions`를 임의로 만들지 않으며 두 필드는 선택입니다.
 - 기존 수동/레거시 보고서는 기존 `cl_level`, `contributions` 필수 규칙을 그대로 사용합니다.
-- 개인 프로젝트는 Notion 프로젝트 DB에는 동기화하지만 팀 제출현황 체크박스는 갱신하지 않습니다.
+- 개인 프로젝트는 팀 제출현황 집계에 포함되지 않습니다.
 
 회원이 올린 Markdown 본문에는 YAML frontmatter가 없어야 하며, ASC_WEB이 승인 시 신뢰 가능한 frontmatter를 자동 생성합니다.
 
@@ -156,51 +156,12 @@ git push origin project/A조/web-scanner/report-01
 ## 파이프라인
 
 ```
-[쿼드 팀] -> fork/branch -> [PR 제출] -> 리뷰 -> [merge] -> [GitHub Actions] -> [Notion DB]
-                                 |                              |
-                           CI: frontmatter 검증         변경된 .md 파싱 -> 동기화
-                                                        + 제출 현황 체크박스 업데이트
+[쿼드 팀] -> fork/branch -> [PR 제출] -> 리뷰 -> [merge] -> [main 반영]
+                                 |
+                           CI: frontmatter 검증
 ```
 
-### 수동 재동기화
-
-merge 없이 보고서를 수정한 뒤 Notion만 새로 갱신해야 할 때는 `Sync to Notion` 워크플로우를 수동 실행하세요.
-
-- GitHub UI: Actions → **Sync to Notion** → **Run workflow**
-  - `files`: 동기화할 보고서 경로 (쉼표/개행 구분, 비우면 `reports/` 전체)
-  - `week`: 제출 현황 DB의 PW 체크박스를 갱신할 주차 (선택)
-- CLI:
-
-  ```bash
-  gh workflow run notion-sync.yml \
-    -f files="reports/2026/A조/foo/report-01.md" \
-    -f week=3
-  ```
-
 ## 설정 (관리자)
-
-### GitHub Secrets
-
-| Secret | 설명 |
-|--------|------|
-| `NOTION_API_KEY` | Notion Internal Integration Token |
-| `NOTION_PROJECT_DB_ID` | 대상 Notion ProjectDB ID |
-| `NOTION_TRACKING_DB_ID` | 제출 현황 DB ID |
-
-### Notion DB 스키마
-
-| 속성명 | 타입 | 비고 |
-|--------|------|------|
-| 프로젝트명 | Title | PK 역할 |
-| 쿼드 조 | Select | A조, B조, ... |
-| 조원 | Rich text | members join |
-| 보고 회차 | Number | 0~8 |
-| 제출일 | Date | |
-| 진행 상태 | Status | 시작 전/진행 중/보류/완료 |
-| CL 등급 | Select | CL1~CL4 |
-| 최종 보고서 | Checkbox | is_final |
-| 기여도 | Rich text | 팀원별 기여도 |
-| Git 링크 | URL | 보고서 원문 링크 |
 
 ### 브랜치 보호 규칙 (권장)
 
