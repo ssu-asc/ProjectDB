@@ -73,24 +73,25 @@ git checkout -b project/<조명>/<프로젝트명>/report-<회차>
 디렉토리 네이밍 규칙:
 
 ```
-reports/{YYYY}/{쿼드조명}/{프로젝트명}/
+reports/{YYYY}/{1학기|2학기}/{쿼드조명}/{프로젝트명}/
 ```
 
 - **YYYY**: 연도 (예: `2026`)
+- **학기**: 프로젝트가 소속된 `1학기` 또는 `2학기`. 제출 날짜가 늦어져도 소속 학기는 바뀌지 않습니다.
 - **쿼드조명**: 소속 쿼드 조 (예: `A조`, `B조`)
 - **프로젝트명**: 소문자, 공백은 하이픈으로 (예: `web-scanner`, `fuzzer-dev`)
 
 ```bash
-mkdir -p reports/2026/A조/web-scanner
+mkdir -p reports/2026/2학기/A조/web-scanner
 
 # 프로젝트 계획서 (0회차)
-cp templates/project-plan-template.md reports/2026/A조/web-scanner/report-00.md
+cp templates/project-plan-template.md reports/2026/2학기/A조/web-scanner/report-00.md
 
 # 격주 보고서
-cp templates/report-template.md reports/2026/A조/web-scanner/report-01.md
+cp templates/report-template.md reports/2026/2학기/A조/web-scanner/report-01.md
 
 # 최종 보고서
-cp templates/final-report-template.md reports/2026/A조/web-scanner/report-08.md
+cp templates/final-report-template.md reports/2026/2학기/A조/web-scanner/report-08.md
 ```
 
 ### 4. 보고서 작성
@@ -102,6 +103,7 @@ YAML frontmatter를 반드시 작성합니다.
 | 필드 | 설명 | 예시 |
 |------|------|------|
 | `project_name` | 프로젝트명 | `Web Scanner` |
+| `semester` | 프로젝트 소속 학기 (저장 폴더와 일치) | `2026-2` |
 | `quad_name` | 쿼드 조 | `A조` |
 | `members` | 팀원 목록 (리스트) | `["20241234_홍길동", ...]` |
 | `report_number` | 보고 회차 (0~8) | `0` (계획서), `1` ~ `8` |
@@ -152,7 +154,7 @@ python scripts/validate_frontmatter.py
 ### 6. Commit & Push
 
 ```bash
-git add reports/2026/A조/web-scanner/report-01.md
+git add reports/2026/2학기/A조/web-scanner/report-01.md
 git commit -m "Add report: A조/web-scanner report-01"
 git push origin project/A조/web-scanner/report-01
 ```

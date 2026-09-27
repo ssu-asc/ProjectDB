@@ -10,17 +10,23 @@ ASC 보안 동아리 프로젝트 보고서 관리 시스템
 
 ## 구조
 
+학기를 선택해 보고서를 확인하세요: **[2026년 1학기](reports/2026/1학기/)** · **[2026년 2학기](reports/2026/2학기/)**
+
+보고서는 제출 날짜가 아니라 **프로젝트가 소속된 학기**로 나눕니다. 1학기 프로젝트의 여름·9월 지연 제출도 1학기에 보관합니다.
+
 ```
 reports/
 └── {YYYY}/
-    └── {쿼드조명}/
-        └── {프로젝트명}/
-            ├── report-00.md    # 프로젝트 계획서 (0회차)
-            ├── report-01.md    # 격주 진행 보고서
-            ├── report-02.md
-            ├── ...
-            ├── report-08.md    # 최종 기술 보고서 (is_final: true)
-            └── assets/         # 스크린샷, 다이어그램 (선택)
+    ├── 1학기/
+    └── 2학기/
+        └── {쿼드조명 또는 개인}/
+            └── {프로젝트명}/
+                ├── report-00.md    # 프로젝트 계획서 (0회차)
+                ├── report-01.md    # 격주 진행 보고서
+                ├── report-02.md
+                ├── ...
+                ├── report-08.md    # 최종 기술 보고서 (is_final: true)
+                └── assets/         # 스크린샷, 다이어그램 (선택)
 ```
 
 ## 보고 회차
@@ -88,9 +94,10 @@ reports/
 
 ASC_WEB에서 승인된 프로젝트 보고서는 기존 ProjectDB 안에 자동으로 저장됩니다. 별도 보고서 저장소를 만들지 않습니다.
 
-- 팀 프로젝트: `reports/{YYYY}/{팀명}/{round_key}-{프로젝트명}/report-01.md`
-- 개인 프로젝트: `reports/{YYYY}/개인/{학번}-{round_key}-{프로젝트명}/report-01.md`
-- `source: asc_web`, `project_type: team|individual` 메타데이터가 붙습니다.
+- 팀 프로젝트: `reports/{YYYY}/{1학기|2학기}/{팀명}/{round_key}-{프로젝트명}/report-01.md`
+- 개인 프로젝트: `reports/{YYYY}/{1학기|2학기}/개인/{GitHubID 또는 이름_학번}-{N회차}-{프로젝트주제}/report-01.md`
+- `source: asc_web`, `project_type: team|individual`, `semester: YYYY-1|YYYY-2` 메타데이터가 붙습니다.
+- 학기는 ASC_WEB 제출물의 학기로 결정하며 같은 팀·개인·회차도 학기가 다르면 다른 경로에 저장됩니다.
 - 개인 프로젝트는 `quad_name: "개인"`을 사용합니다.
 - ASC_WEB 생성 보고서는 실제 DB 회원/팀 정보를 사용하므로 `cl_level`, `contributions`를 임의로 만들지 않으며 두 필드는 선택입니다.
 - 기존 수동/레거시 보고서는 기존 `cl_level`, `contributions` 필수 규칙을 그대로 사용합니다.
@@ -112,29 +119,31 @@ cd ProjectDB
 
 ```bash
 # 디렉토리 생성
-mkdir -p reports/2026/A조/web-scanner
+mkdir -p reports/2026/2학기/A조/web-scanner
 
 # 프로젝트 계획서 (0회차) 템플릿 복사
-cp templates/project-plan-template.md reports/2026/A조/web-scanner/report-00.md
+cp templates/project-plan-template.md reports/2026/2학기/A조/web-scanner/report-00.md
 
 # 격주 보고서 템플릿 복사
-cp templates/report-template.md reports/2026/A조/web-scanner/report-01.md
+cp templates/report-template.md reports/2026/2학기/A조/web-scanner/report-01.md
 
 # 개인 프로젝트 진행 보고서 템플릿 복사
-mkdir -p reports/2026/개인/20260001-personal-project
-cp templates/individual-report-template.md reports/2026/개인/20260001-personal-project/report-01.md
+mkdir -p reports/2026/2학기/개인/20260001-personal-project
+cp templates/individual-report-template.md reports/2026/2학기/개인/20260001-personal-project/report-01.md
 
 # 개인 프로젝트 계획서
-cp templates/individual-project-plan-template.md reports/2026/개인/20260001-personal-project/report-00.md
+cp templates/individual-project-plan-template.md reports/2026/2학기/개인/20260001-personal-project/report-00.md
 
 # 개인 프로젝트 최종 보고서
-cp templates/individual-final-report-template.md reports/2026/개인/20260001-personal-project/report-08.md
+cp templates/individual-final-report-template.md reports/2026/2학기/개인/20260001-personal-project/report-08.md
 
 # 최종 보고서의 경우
-cp templates/final-report-template.md reports/2026/A조/web-scanner/report-08.md
+cp templates/final-report-template.md reports/2026/2학기/A조/web-scanner/report-08.md
 ```
 
 ### 3. 로컬 검증
+
+템플릿의 `semester`를 해당 프로젝트 학기(`2026-1` 또는 `2026-2`)로 입력하고 저장 폴더와 맞춰주세요. 기존 이관 보고서는 학기 폴더로 구분하며 본문과 이미지 경로를 유지합니다. 과거 commit SHA에 연결된 보고서 링크도 계속 열 수 있습니다.
 
 ```bash
 pip install -r scripts/requirements.txt

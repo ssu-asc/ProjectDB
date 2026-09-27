@@ -19,7 +19,7 @@ contributions:
     role: "동적 분석 / 실행 행위 모니터링"
     tasks: "모니터링 분석 계획서 작성"
     percentage: 25
-  - name: "학번_이름"
+  - name: "20261619_안시후"
     role: "테스트 환경 / parser 및 테스트 암호화 코드"
     tasks: "구체적으로 수행한 작업"
     percentage: 25

@@ -15,7 +15,7 @@ contributions:
     role: "정적 분석 / 바이너리 구조 분석"
     tasks: "바이너리 내 예외 처리 구문의 비교 조건문 분기 흐름 읽기"
     percentage: 25
-  - name: "학번_안시후"
+  - name: "20261619_안시후"
     role: "담당 역할"
     tasks: "구체적으로 수행한 작업"
     percentage: 25
