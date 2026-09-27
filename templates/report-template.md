@@ -1,5 +1,6 @@
 ---
 project_name: "프로젝트명"
+semester: "2026-2"       # 프로젝트 소속 학기: YYYY-1 또는 YYYY-2 (저장 폴더와 일치)
 quad_name: "A조"
 members: ["학번_이름1", "학번_이름2", "학번_이름3", "학번_이름4"]
 report_number: 1          # 격주 보고 회차 (1~8)

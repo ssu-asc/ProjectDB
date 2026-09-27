@@ -21,7 +21,7 @@ LEGACY_REQUIRED_FIELDS = [
 ]
 PORTAL_REQUIRED_FIELDS = [
     "source", "project_type", "project_name", "quad_name", "members",
-    "report_number", "date", "status", "portal_submission_id",
+    "report_number", "date", "status", "portal_submission_id", "semester",
 ]
 VALID_PROJECT_TYPES = {"individual", "team"}
 VALID_STATUSES = {"시작 전", "진행 중", "보류", "완료"}
@@ -54,6 +54,12 @@ def validate_file(filepath: Path) -> list[str]:
             errors.append(
                 f"유효하지 않은 project_type: '{project_type}' (허용: individual, team)"
             )
+
+    semester = metadata.get("semester")
+    if semester is not None and (
+        not isinstance(semester, str) or not re.fullmatch(r"\d{4}-[12]", semester)
+    ):
+        errors.append("semester는 YYYY-1 또는 YYYY-2 형식이어야 합니다")
 
     # status 유효값 검사
     status = metadata.get("status")
@@ -161,22 +167,28 @@ def validate_file(filepath: Path) -> list[str]:
                 f"최종 보고서(is_final: true)의 status는 '완료'여야 합니다 (현재: '{status}')"
             )
 
-    # 경로 검증: reports/{YYYY}/{조명}/{프로젝트명}/report-XX.md
+    # 제출일이 늦더라도 프로젝트 소속 학기를 사용한다.
+    # 기존 이관 보고서는 폴더로 학기를 식별하고, 명시된 메타데이터는 일치해야 한다.
     parts = filepath.parts
     try:
         reports_idx = list(parts).index("reports")
         remaining = parts[reports_idx:]
-        # reports / YYYY / 조명 / 프로젝트명 / report-XX.md
-        if len(remaining) < 5:
+        # reports / YYYY / N학기 / 조명 / 프로젝트명 / report-XX.md
+        if len(remaining) != 6:
             errors.append(
-                f"경로가 'reports/{{YYYY}}/{{조명}}/{{프로젝트명}}/report-XX.md' 패턴이어야 합니다"
+                "경로가 'reports/{YYYY}/{1학기|2학기}/{조명}/{프로젝트명}/report-XX.md' 패턴이어야 합니다"
             )
         else:
             year = remaining[1]
+            term = remaining[2]
             filename = remaining[-1]
-            if not re.match(r"^\d{4}$", year):
+            if not re.fullmatch(r"\d{4}", year):
                 errors.append(f"경로의 연도가 올바르지 않습니다: '{year}'")
-            if not re.match(r"^report-\d{2}\.md$", filename):
+            if term not in {"1학기", "2학기"}:
+                errors.append(f"경로의 학기는 1학기 또는 2학기여야 합니다: '{term}'")
+            elif semester is not None and semester != f"{year}-{term[0]}":
+                errors.append("semester 메타데이터와 저장 경로의 학기가 일치하지 않습니다")
+            if not re.fullmatch(r"report-\d{2}\.md", filename):
                 errors.append(f"파일명이 'report-XX.md' 패턴이어야 합니다 (현재: '{filename}')")
     except ValueError:
         pass  # reports 디렉토리 외부 파일은 경로 검증 건너뜀
